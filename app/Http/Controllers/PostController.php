@@ -4,14 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Http\Middleware\UserOwnsPost;
 use App\Http\Requests\CreatePostRequest;
+use App\Models\Image;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class PostController extends Controller
 {
-    public function __construct() {
+    public function __construct()
+    {
         $this->middleware(UserOwnsPost::class)->except(['index', 'create', 'store']);
     }
 
@@ -39,7 +42,7 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(CreatePostRequest $request)
@@ -49,13 +52,20 @@ class PostController extends Controller
 //        $post->title = $request->input('title');
 //        $post->body = $request->input('body');
         $post->save();
+
+        foreach ($request->validated()['image'] as $image) {
+            $path = $image->store('public');
+            $image = new Image();
+            $image->path = Storage::url($path);
+            $post->images()->save($image);
+        }
         return response()->redirectTo('/admin/posts');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Post  $post
+     * @param \App\Models\Post $post
      * @return \Illuminate\Http\Response
      */
     public function show(Post $post)
@@ -67,7 +77,7 @@ class PostController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Post  $post
+     * @param \App\Models\Post $post
      * @return \Illuminate\Http\Response
      */
     public function edit(Post $post)
@@ -78,8 +88,8 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Post  $post
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Post $post
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(CreatePostRequest $request, Post $post)
@@ -94,7 +104,7 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Post  $post
+     * @param \App\Models\Post $post
      * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Post $post)

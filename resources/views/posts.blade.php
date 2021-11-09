@@ -6,7 +6,8 @@
             @if($posts->previousPageUrl())
                 <a href="{{$posts->previousPageUrl()}}" class="btn btn-primary">Previous</a>
             @else
-                <a href="{{$posts->previousPageUrl()}}" class="btn btn-primary disabled" role="button" aria-disabled="true">Previous</a>
+                <a href="{{$posts->previousPageUrl()}}" class="btn btn-primary disabled" role="button"
+                   aria-disabled="true">Previous</a>
             @endif
         </div>
         <div class="col text-end">
@@ -22,7 +23,7 @@
             <div class="col">
                 <div class="card mt-3">
                     @if($post->images->count() > 1)
-                       @include('partials.carousel', ['images' => $post->images, 'id' => $post->id])
+                        @include('partials.carousel', ['images' => $post->images, 'id' => $post->id])
                     @elseif($post->images->count() == 1)
                         <img src="{{$post->images->first()->path}}" class="card-img-top">
                     @endif
@@ -31,6 +32,18 @@
                         <p class="card-text">{{ $post->snippet }}</p>
                         <p class="card-text text-muted">{{ $post->user->name }}</p>
                         <p class="card-text text-muted">{{ $post->created_at->diffForHumans() }}</p>
+                        <p class="card-text text-muted"><b>Comments:</b>{{ $post->comments()->count() }}</p>
+                        <p class="card-text text-muted"><b>Likes:</b>{{ $post->likes()->count() }}</p>
+
+
+                        <a href="{{route('post.like', ['post' => $post->id])}}" class="card-link">
+                            @if($post->auth_has_liked)
+                                Unlike
+                            @else
+                                Like
+                            @endif
+                        </a>
+
                         <a href="{{route('post', ['post' => $post->id])}}" class="card-link">Read more</a>
                     </div>
                 </div>
