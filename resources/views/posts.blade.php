@@ -30,7 +30,7 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ $post->title }}</h5>
                         <p class="card-text">{{ $post->snippet }}</p>
-                        <p class="card-text text-muted">{{ $post->user->name }}</p>
+                        <a class="card-text text-muted">{{ $post->user->name }}</a>
                         <p class="card-text text-muted">{{ $post->created_at->diffForHumans() }}</p>
                         <p class="card-text text-muted"><b>Comments:</b>{{ $post->comments()->count() }}</p>
                         <p class="card-text text-muted"><b>Likes:</b>{{ $post->likes()->count() }}</p>
@@ -43,6 +43,12 @@
                                 Like
                             @endif
                         </a>
+
+                        <p class="card-text text-muted">
+                            @foreach($post->tags as $tag)
+                                <a href="/tag/{{$tag->id}}">{{$tag->name}}</a>
+                            @endforeach
+                        </p>
 
                         <a href="{{route('post', ['post' => $post->id])}}" class="card-link">Read more</a>
                     </div>
