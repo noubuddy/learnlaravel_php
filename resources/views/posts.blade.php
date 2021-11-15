@@ -30,7 +30,7 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ $post->title }}</h5>
                         <p class="card-text">{{ $post->snippet }}</p>
-                        <a class="card-text text-muted">{{ $post->user->name }}</a>
+                        <a href="/user/{{$post->user->id}}">{{$post->user->name}}</a>
                         <p class="card-text text-muted">{{ $post->created_at->diffForHumans() }}</p>
                         <p class="card-text text-muted"><b>Comments:</b>{{ $post->comments()->count() }}</p>
                         <p class="card-text text-muted"><b>Likes:</b>{{ $post->likes()->count() }}</p>
