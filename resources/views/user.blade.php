@@ -8,7 +8,7 @@
             <p class="card-text">Email: {{ $user->email }}</p>
             <p class="card-text">Count of posts: {{ $user->posts()->count() }}</p>
             <p class="card-text">Count of comments: {{ $user->comments()->count() }}</p>
-            <p class="card-text">Count of likes: {{ $user->likes()->count() }}</p>
+            <p class="card-text">Count of likes: {{ $user->likeCounter()->count() }}</p>
         </div>
     </div>
     <div class="row row-cols-4">
