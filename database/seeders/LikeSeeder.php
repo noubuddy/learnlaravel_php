@@ -17,13 +17,22 @@ class LikeSeeder extends Seeder
     public function run()
     {
         $posts = Post::all();
-        foreach ($posts as $post){
+        foreach ($posts as $post) {
             $rand = rand(0, 20);
             $users = User::inRandomOrder()->take($rand)->get();
-            Like::factory($rand)->make(['post_id' => $post->id])->each(function ($like, $key) use ($users){
+            Like::factory($rand)->make(['post_id' => $post->id])->each(function ($like, $key) use ($users) {
                 $like->user_id = $users[$key]->id;
                 $like->save();
             });
+
+            foreach ($post->comments as $comment) {
+                $rand = rand(0, 20);
+                $users = User::inRandomOrder()->take($rand)->get();
+                Like::factory($rand)->make(['comment_id' => $comment->id])->each(function ($like, $key) use ($users) {
+                    $like->user_id = $users[$key]->id;
+                    $like->save();
+                });
+            }
         }
     }
 }

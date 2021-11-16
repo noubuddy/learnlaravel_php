@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comment;
 use App\Models\Like;
 use App\Models\Post;
 use Illuminate\Http\Request;
@@ -43,6 +44,27 @@ class LikeController extends Controller
         } else {
             $like = new Like();
             $like->post()->associate($post);
+            $like->user()->associate(auth()->user());
+            $like->save();
+        }
+        return response()->redirectTo(URL::previous());
+    }
+
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function commentLike(Request $request, Comment $comment)
+    {
+        $like = $comment->likes()->where('user_id', auth()->user()->id)->first();
+        if ($like) {
+            $like->delete();
+        } else {
+            $like = new Like();
+            $like->comment()->associate($comment);
             $like->user()->associate(auth()->user());
             $like->save();
         }
