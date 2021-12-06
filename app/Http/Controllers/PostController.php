@@ -15,7 +15,11 @@ class PostController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(UserOwnsPost::class)->except(['index', 'create', 'store']);
+        $this->middleware(UserOwnsPost::class)->except(['index', 'create', 'store', 'posts']);
+    }
+
+    public function posts(){
+        return Post::with(['images'])->inRandomOrder()->take(20)->get();
     }
 
     /**
